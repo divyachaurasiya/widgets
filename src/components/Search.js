@@ -3,9 +3,20 @@ import axios from 'axios';
 
 
 const Search = () => {
+    const [term, setTerm] = useState('Programing');
+    const [results, setResults] = useState([]);
+    const [debounceText, setDebounceText] = useState(term);
 
-    const [term, setTerm] = useState('');
-    const [result, setResult] = useState([]);
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setDebounceText(setTerm);    
+        
+        },500);
+        return () => {
+            clearTimeout(timeoutId);
+        }
+
+    });
 
     useEffect(()=> { 
        const search = async () => {
@@ -18,28 +29,43 @@ const Search = () => {
                     srsearch : term,
                 },
             });
-            setResult(data.query.search);
+            setResults(data.query.search);
         };
-        if (term) {
-            search();
-        }
-        
 
-        },
-        [term]);
+        search();
+           
+    }, [debounceText]);
+       
+    const renderdResult = results.map((result) => {
+
+        return (
+            <div key={result.pageid} className="item">
+                <div className="right floated content">
+                <a  href={`https://en.wikipedia.org?curid=${result.pageid}`} className="ui button" >GO</a>
+                </div>
+                <div className="content">
+                    <div className="heder">
+                        <h4>{result.title}</h4>
+                    </div>
+                    <div dangerouslySetInnerHTML = {{ __html : result.snippet }}/>
+                </div>
+            </div>
+        );
+    });
 
     return (
-        <div className="ui segment">
         <div className="ui form">
             <div className="field">
             <label>Please enter the search term</label>
             <input 
             value={term}
             onChange={(e)=> setTerm(e.target.value)}
-            className="input" type="text" />
+            className="input" />
             </div>
+            <div className="ui celled list" >{renderdResult}</div>
         </div>
-        </div>
+      
+        
     );
 };
 
