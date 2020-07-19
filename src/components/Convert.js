@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 const Convert = ({term,language}) => {
+
     const [convertedLanguage, setConvertedLanguage] = useState('');
     const [debouncingText, setDebouncingText] = useState(term);
 
@@ -20,7 +21,7 @@ const Convert = ({term,language}) => {
         const onLanguageChange = async () => {
             const {data} = await axios.post('https://translation.googleapis.com/language/translate/v2', {}, {
                 params : {
-                    q: term,
+                    q: debouncingText,
                     target:language.value,
                     key: 'AIzaSyCHUCmpR7cT_yDFHC98CZJy2LTms-IwDlM'
                 }
@@ -32,7 +33,9 @@ const Convert = ({term,language}) => {
     
     },[debouncingText, language]);
 
-    return (<div><h3>{convertedLanguage}</h3></div>);
+    return (
+    <div><h3>{convertedLanguage}</h3></div>
+    );
 
 };
 
