@@ -26,7 +26,7 @@ const Search = () => {
                     list : 'search',
                     origin : '*',
                     format :'json',
-                    srsearch : term,
+                    srsearch : debounceText,
                 },
             });
             setResults(data.query.search);
